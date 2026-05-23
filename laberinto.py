@@ -150,7 +150,6 @@ def existe_camino(laberinto: list, fila: int, col: int,
     visitados.discard((fila, col))
     ruta.pop()      
     return False
-    pass  # TODO
 
 
 # ============================================================
