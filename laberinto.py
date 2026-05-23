@@ -197,12 +197,28 @@ def imprimir_laberinto(laberinto: list, visitados: set,
 
     # PASO 1 – Imprime el encabezado del paso.
     #   print(f"\n--- Paso {paso} ---")
-
+    print(f"\n--- Paso {paso} ---")
     # PASO 2 – Recorre las filas y columnas.
     #   Para cada celda, determina el símbolo según la prioridad definida arriba.
     #   Imprime cada fila como una cadena con los símbolos separados por espacios.
-
-    pass  # TODO
+    for i in range(filas):
+        fila_str = []
+        for j in range(cols):
+            if (i, j) == (0, 0):
+                simbolo = 'S'
+            elif (i, j) == (filas - 1, cols - 1):
+                simbolo = 'E'
+            elif laberinto[i][j] == 1:
+                simbolo = '#'
+            elif (i, j) in ruta_set:
+                simbolo = '·'
+            elif (i, j) in visitados:
+                simbolo = '*'
+            else:
+                simbolo = '.'
+            fila_str.append(simbolo)
+        print(' '.join(fila_str))
+  
 
 
 def encontrar_camino(laberinto: list, verbose: bool = False) -> list | None:
@@ -236,8 +252,15 @@ def encontrar_camino(laberinto: list, verbose: bool = False) -> list | None:
 
     # Llama a existe_camino desde la posición inicial (0, 0).
     # Si retorna True, devuelve 'ruta'. Si False, devuelve None.
+    if verbose:
+        pasos = [0]  # contador mutable para los pasos
+        if existe_camino(laberinto, 0, 0, visitados, ruta, pasos):
+            return ruta
+    else:
+        if existe_camino(laberinto, 0, 0, visitados, ruta):
+            return ruta 
+    return None
 
-    pass  # TODO
 
 
 # ============================================================
