@@ -105,23 +105,29 @@ def existe_camino(laberinto: list, fila: int, col: int,
     # PASO 1a – Verifica si (fila, col) está FUERA de los límites del laberinto.
     #   Condición: fila < 0 or fila >= filas or col < 0 or col >= cols
     #   Si se cumple, retorna False. Esta celda no existe.
-
+    if fila < 0 or fila >= filas or col < 0 or col >= cols:
+        return False
     # PASO 1b – Verifica si la celda es una PARED.
     #   if laberinto[fila][col] == 1: return False
-
+    if laberinto[fila][col] == 1:
+        return False
     # PASO 1c – Verifica si la celda ya fue VISITADA.
     #   if (fila, col) in visitados: return False
     #   Esto evita ciclos infinitos (por ejemplo, ir y volver entre dos celdas).
-
+    if (fila, col) in visitados:
+        return False
     # PASO 1d – Verifica si llegamos a la SALIDA.
     #   La salida es la esquina inferior derecha: (filas-1, cols-1).
     #   Si fila == filas-1 and col == cols-1:
     #       agrega (fila, col) a ruta y retorna True.
-
+    if fila == filas - 1 and col == cols - 1:
+        ruta.append((fila, col))
+        return True
     # PASO 2 – Marca la celda como visitada.
     #   visitados.add((fila, col))
     #   ruta.append((fila, col))
-
+    visitados.add((fila, col))
+    ruta.append((fila, col))
     # PASO 3 – Explora recursivamente los cuatro vecinos.
     #   Define las cuatro direcciones: abajo (1,0), derecha (0,1),
     #                                   arriba (-1,0), izquierda (0,-1).
@@ -130,13 +136,20 @@ def existe_camino(laberinto: list, fila: int, col: int,
     #       nueva_col  = col + dc
     #       if existe_camino(laberinto, nueva_fila, nueva_col, visitados, ruta):
     #           return True   ← propagamos el éxito hacia arriba
-
+    direcciones = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+    for df, dc in direcciones:
+        nueva_fila = fila + df
+        nueva_col  = col + dc
+        if existe_camino(laberinto, nueva_fila, nueva_col, visitados, ruta):
+            return True
     # PASO 4 – BACKTRACK: ningún vecino condujo a la salida.
     #   Desmarca la celda:
     #       visitados.discard((fila, col))
     #       ruta.pop()
     #   Retorna False.
-
+    visitados.discard((fila, col))
+    ruta.pop()      
+    return False
     pass  # TODO
 
 
