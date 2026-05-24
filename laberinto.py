@@ -316,29 +316,79 @@ def contar_caminos(laberinto: list, fila: int, col: int,
     cols  = len(laberinto[0])
 
     # PASO 1a – Fuera de límites → return 0
+    if fila < 0 or fila >= filas or col < 0 or col >= cols:
+        return 0
 
     # PASO 1b – Pared → return 0
 
+    if laberinto[fila][col] == "#":
+        return 0
+
     # PASO 1c – Ya visitada → return 0
+    if (fila, col) in visitados:
+        return 0
 
-    # PASO 2 – Marca como visitada.
+    # PASO 2 — Marcar como visitada
+    visitados.add((fila, col))
 
-    # PASO 3 – ¿Llegamos a la salida?
-    #   if fila == filas-1 and col == cols-1:
-    #       cantidad = 1   (este es un camino completo)
-    #   else:
-    #       cantidad = 0
-    #       for df, dc in [(1,0), (0,1), (-1,0), (0,-1)]:
-    #           cantidad += contar_caminos(laberinto, fila+df, col+dc, visitados)
+    # PASO 3 — Si llegamos a la salida
+    if fila == filas - 1 and col == cols - 1:
+        cantidad = 1
+    else:
+        cantidad = 0
+        for df, dc in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
+            cantidad += contar_caminos(
+                laberinto,
+                fila + df,
+                col + dc,
+                visitados
+            )
 
-    # PASO 4 – SIEMPRE backtrack: visitados.discard((fila, col))
-    #   A diferencia de existe_camino, aquí NO tenemos 'ruta', así que
-    #   el backtrack es solo quitar del conjunto 'visitados'.
+    # PASO 4 — Backtrack: desvisitar la celda
+    visitados.discard((fila, col))
 
-    # PASO 5 – return cantidad
+    # PASO 5 — Regresar cantidad total
+    return cantidad
 
     pass  # TODO
 
+def contar_caminos(laberinto: list, fila: int, col: int,
+                   visitados: set) -> int:
+    """
+    Cuenta todos los caminos distintos de (fila, col) a la salida.
+
+    Retorna:
+        Número de caminos válidos.
+    """
+    filas = len(laberinto)
+    cols = len(laberinto[0])
+
+    if fila < 0 or fila >= filas or col < 0 or col >= cols:
+        return 0
+
+    if laberinto[fila][col] == "#":
+        return 0
+
+    if (fila, col) in visitados:
+        return 0
+
+    visitados.add((fila, col))
+
+    if fila == filas - 1 and col == cols - 1:
+        cantidad = 1
+    else:
+        cantidad = 0
+        for df, dc in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
+            cantidad += contar_caminos(
+                laberinto,
+                fila + df,
+                col + dc,
+                visitados
+            )
+
+    visitados.discard((fila, col))
+
+    return cantidad
 
 # ============================================================
 # EXPERIMENTOS
